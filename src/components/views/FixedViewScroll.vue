@@ -6,7 +6,7 @@
 
 <style>
 .fixedviewscroll {
-    height: 100%;
-    overflow-y: scroll;
+    height: calc(100% - 80px);
+    overflow-y: auto;
 }
 </style>

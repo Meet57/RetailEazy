@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import { constants } from '../utils/constants'
-import { collection, getDoc, getDocs } from "firebase/firestore";
+import { collection, doc, getDocs, setDoc } from "firebase/firestore"
 import { db } from '../stores/firebase'
-import { customerDummyData } from './dummy'
+import { v4 as uuidv4 } from "uuid";
 
 const customerCollection = collection(db, 'customer-details')
 
@@ -20,13 +20,19 @@ export const customerStore = defineStore(
             }
         },
         actions: {
-            getCustomerData() {
+            fetchCustomerData() {
                 getDocs(customerCollection)
                     .then((doc) => {
+                        this.customerDetails = []
                         doc.forEach((data) => {
                             this.customerDetails.push({ ...data.data(), id: data.id })
                         })
                     })
+            },
+            addNewCustomer(data) {
+                var id = uuidv4()
+                setDoc(doc(db, "customer-details", id), { ...data, id })
+                this.fetchCustomerData()
             }
         }
     }

@@ -1,7 +1,10 @@
 <template>
-    <div className="flex">
-        <div className="border p-5" @click="customerBase">
+    <div className="flex p-5">
+        <div className="border w-6/12 m-1 text-center bg-cyan-900 text-white p-5" @click="customerBasePage">
             Customer Base
+        </div>
+        <div className="border w-6/12 m-1 text-center bg-cyan-900 text-white p-5" @click="inventoryPage">
+            Inventory
         </div>
     </div>
 </template>
@@ -10,8 +13,11 @@
 export default {
     name: "home-view",
     methods: {
-        customerBase() {
+        customerBasePage() {
             this.$router.replace("/customer-details")
+        },
+        inventoryPage() {
+            this.$router.replace("/inventory")
         }
     }
 };

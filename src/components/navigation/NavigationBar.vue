@@ -1,5 +1,5 @@
 <template>
-    <div className="bg-indigo-950 text-white py-5 px-5 flex justify-between place-items-center">
+    <div className="bg-indigo-950 text-white px-5 flex justify-between place-items-center navigation-bar">
         <div className="text-xl">
             Retail Eazy
         </div>
@@ -20,4 +20,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.navigation-bar {
+    min-height: 80px;
+}
+</style>
