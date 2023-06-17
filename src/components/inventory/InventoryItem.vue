@@ -11,6 +11,7 @@
             </template>
             <div>
                 <p><strong>Quantity:</strong> 14</p>
+                <p><strong>Price:</strong> Rs. 50</p>
             </div>
         </a-card>
     </div>

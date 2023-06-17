@@ -1,4 +1,7 @@
 <template>
+    <!-- <div class="loading-screen flex flex-col items-center justify-center">
+        <LoadingView :size="'large'" :message="'Meet'" />
+    </div> -->
     <div class="scrollable-container">
         <div class="fixed-div">
             <NavigationBar />
@@ -12,6 +15,7 @@
 <script>
 import NavigationBar from './components/navigation/NavigationBar.vue';
 import FixedViewScroll from './components/views/FixedViewScroll.vue';
+import LoadingView from './components/views/LodingView.vue'
 
 export default {
     data() {
@@ -21,12 +25,21 @@ export default {
     },
     components: {
         NavigationBar,
-        FixedViewScroll
+        FixedViewScroll,
+        LoadingView
     }
 }
 </script>
 
 <style>
+.loading-screen {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
 .scrollable-container {
     position: relative;
     height: 100vh;

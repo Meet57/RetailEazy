@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { constants } from '../utils/constants'
-import { collection, doc, getDocs, setDoc } from "firebase/firestore"
+import { collection, doc, getDocs, setDoc, deleteDoc } from "firebase/firestore"
 import { db } from '../stores/firebase'
 import { v4 as uuidv4 } from "uuid";
 
@@ -30,9 +30,17 @@ export const customerStore = defineStore(
                     })
             },
             addNewCustomer(data) {
-                var id = uuidv4()
+                var id = data.id == undefined ? uuidv4() : data.id
                 setDoc(doc(db, "customer-details", id), { ...data, id })
-                this.fetchCustomerData()
+                    .then((data) => {
+                        this.fetchCustomerData()
+                    })
+            },
+            deleteCustomer(id) {
+                deleteDoc(doc(db, "customer-details", id))
+                    .then((data) => {
+                        this.fetchCustomerData()
+                    })
             }
         }
     }

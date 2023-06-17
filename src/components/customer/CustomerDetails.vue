@@ -1,7 +1,7 @@
 <template>
     <div className="border px-5 py-2 text-indigo-950">
-        <div className="flex justify-between align-middle">
-            Customer Details
+        <div className="flex justify-between item-center">
+            <span className="text-xl">Customer Details</span>
             <a-button @click="() => { modelToggle = true }">Add</a-button>
         </div>
         <div className="mt-2">
@@ -10,7 +10,7 @@
     </div>
     <div className="px-5">
         <div className="my-2" v-for="customer in customerDetails">
-            <customer-box :customer="customer" @editCustomer="editCustomer" />
+            <customer-box :customer="customer" @editCustomer="editCustomer" @deleteCustomer="deleteCustomerFn" />
         </div>
     </div>
     <model-view :visible="modelToggle" :okText="modelContent.id == undefined ? 'Save' : 'Update'" @okClicked="handleOk"
@@ -23,13 +23,19 @@
                 Edit Customer: {{ modelContent.name }}
             </div>
         </template>
-        <div className="mt-2"><a-input v-model:value="modelContent.name" addonBefore="Name" /></div>
-        <div className="mt-2"><a-input v-model:value="modelContent.store" addonBefore="Store" /></div>
-        <div className="mt-2"><a-input-number v-model:value="modelContent.phone" addonBefore="Number" /></div>
-        <div className="mt-2"><a-input v-model:value="modelContent.address" addonBefore="Address" /></div>
+        <form id="customer-form">
+            <div className="mt-2"><a-input v-model:value="modelContent.name" addonBefore="Name" /></div>
+            <div className="mt-2"><a-input v-model:value="modelContent.store" addonBefore="Store" /></div>
+            <div className="mt-2"><a-input-number v-model:value="modelContent.phone" addonBefore="Number" /></div>
+            <div className="mt-2"><a-input v-model:value="modelContent.address" addonBefore="Address" /></div>
+        </form>
         <div className="mt-2 flex justify-between items-center">
             <a-button @click="grabGeoLocation">Location</a-button>
-            <p v-if="modelContent.longitude != undefined" className="text-green-400 m-0 p-0">Geo Location Captured</p>
+            <p v-if="modelContent.longitude != undefined" className="text-green-900 text-xs m-0 p-0">
+                Geo Location:
+                {{ modelContent.latitude.toString().slice(0, 5) }},
+                {{ modelContent.longitude.toString().slice(0, 5) }}
+            </p>
         </div>
     </model-view>
 </template>
@@ -55,9 +61,7 @@ export default {
         }
     },
     mounted() {
-        if (this.getCustomerDetails.length == 0) {
-            this.fetchCustomerData()
-        }
+        this.fetchCustomerData()
     },
     computed: {
         ...mapState(customerStore, ['getCustomerDetails']),
@@ -76,19 +80,15 @@ export default {
         }
     },
     methods: {
-        ...mapActions(customerStore, ['fetchCustomerData', 'addNewCustomer']),
+        ...mapActions(customerStore, ['fetchCustomerData', 'addNewCustomer', 'deleteCustomer']),
         handleOk() {
-            if (this.modelContent.id == undefined) {
-                this.modelToggle = false
-                this.addNewCustomer(this.modelContent)
-                this.modelContent = {}
-            } else {
-                this.modelToggle = false
-                this.modelContent = {}
-            }
+            this.modelToggle = false
+            this.addNewCustomer(this.modelContent)
+            this.modelContent = {}
         },
         handleClose() {
             this.modelToggle = false
+            this.modelContent = {}
         },
         showPosition(position) {
             this.modelContent.latitude = position.coords.latitude
@@ -101,9 +101,12 @@ export default {
                 alert("Geolocation is not supported by this browser.")
             }
         },
-        editCustomer(data) {
-            this.modelContent = this.getCustomerDetails.filter((customer) => customer.id == data)[0]
+        editCustomer(id) {
+            this.modelContent = this.getCustomerDetails.filter((customer) => customer.id == id)[0]
             this.modelToggle = true
+        },
+        deleteCustomerFn(id) {
+            this.deleteCustomer(id)
         }
     }
 };
